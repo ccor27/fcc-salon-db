@@ -26,3 +26,13 @@ COLOR(){}
 PERM(){}
 STYLE(){}
 TRIM(){}
+FETCH_CUSTOMER_ID(){
+  echo -e "\nWhat's your phone number?"
+  read PHONE_NUMBER
+  #fetch customer by phone number
+  CUSTOMER_ID=$($PSQL "select customer_id from customers where phone='$PHONE_NUMBER'")
+  #if customer does not exist in the database
+  if [[]]
+  then
+  fi
+}
