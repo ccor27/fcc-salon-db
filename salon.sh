@@ -9,14 +9,19 @@ then
  echo -e "\n$1"
 fi
 #get services
-SERVICES=$($PSQL "select service_id,name from services")
+SERVICES=$($PSQL "select service_id, name from services")
 #show services propertly
 echo "$SERVICES" | while read SERVICE_ID BAR NAME
 do
- echo "$SERVICE_ID) $NAME Service"
+  echo "$SERVICE_ID) $NAME"
 done
 #get selected service's id
 read SERVICE_ID_SELECTED
+#validate that the input be a number
+if [[ ! $SERVICE_ID_SELECTED =~ ^[0-9]+$ ]]
+then
+ MAIN_MENU "I could not find that service. What would you like today?"
+fi
 SERVICE_SELECTED_ID=$($PSQL "select service_id from services where service_id=$SERVICE_ID_SELECTED")
 if [[ -z $SERVICE_SELECTED_ID ]]
 then
@@ -48,7 +53,7 @@ TIME_FORMATED=$(echo $SERVICE_TIME | sed -r 's/^ *| *$//g')
 #insert into appointment
 APPOINTMENT_INSERT_RESULT=$($PSQL "insert into appointments(customer_id,service_id,time) values($CUSTOMER_ID,$SERVICE_SELECTED_ID,'$TIME')")
 #show final message
-echo -e "\nI have put you down for a $SERVICE_FORMATED_NAME at $TIME_FORMATED, $CUSTOMER_FORMATED_NAME."
+echo -e "\nI have put you down for a $SERVICE_FORMATED_NAME at $TIME_FORMATED, $CUSTOMER_FORMATED_NAME.\n"
 #show menu again (list of serices)
 MAIN_MENU
 }
