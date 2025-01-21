@@ -3,19 +3,6 @@ PSQL=("psql -X --username=freecodecamp --dbname=salon --tuples-only -c")
 echo -e "\n~~~~~ MY SALON ~~~~~\n"
 echo -e "Welcome to My Salon, how can I help you?\n"
 
-CREATE_APPOINTMENT(){
-CUST_NAME=$($PSQL "select name from customers where phone='$CUSTOMER_PHONE'") 
- CUST_ID=$($PSQL "select customer_id from customers where phone='$CUSTOMER_PHONE'") 
- CUST_NAME_FORMATED=$(echo $CUST_NAME | sed -r 's/^ *| *$//g')
- SERV_NAME=$($PSQL "select name from services where service_id=$SERVICE_ID_SELECTED")
- SERV_NAME_FORMATED=$(echo $SERV_NAME |sed -r 's/^ *| *$//g')
- echo -e "\nWhat time would you like your $SERV_NAME_FORMATED, $CUST_NAME_FORMATED?"
- read SERVICE_TIME
- APPOINTMENT=$($PSQL "insert into appointments(customer_id,service_id,time) values($CUST_ID,$SERVICE_ID_SELECTED,'$SERVICE_TIME')")
- echo -e "\nI have put you down for a $SERVICE_FORMATED_NAME at $SERVICE_TIME, $CUST_NAME_FORMATED.\n"
-  MAIN_MENU
-}
-
 MAIN_MENU(){
 if [[ $1 ]]
 then
@@ -49,5 +36,15 @@ else
   fi
 fi
 }
-
+CREATE_APPOINTMENT(){
+CUST_NAME=$($PSQL "select name from customers where phone='$CUSTOMER_PHONE'") 
+ CUST_ID=$($PSQL "select customer_id from customers where phone='$CUSTOMER_PHONE'") 
+ CUST_NAME_FORMATED=$(echo $CUST_NAME | sed -r 's/^ *| *$//g')
+ SERV_NAME=$($PSQL "select name from services where service_id=$SERVICE_ID_SELECTED")
+ SERV_NAME_FORMATED=$(echo $SERV_NAME | sed -r 's/^ *| *$//g')
+ echo -e "\nWhat time would you like your $SERV_NAME_FORMATED, $CUST_NAME_FORMATED?"
+ read SERVICE_TIME
+ APPOINTMENT=$($PSQL "insert into appointments(customer_id,service_id,time) values($CUST_ID,$SERVICE_ID_SELECTED,'$SERVICE_TIME')")
+ echo -e "\nI have put you down for a $SERV_NAME_FORMATED at $SERVICE_TIME, $CUST_NAME_FORMATED."
+}
 MAIN_MENU
